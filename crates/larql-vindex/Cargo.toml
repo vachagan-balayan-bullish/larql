@@ -50,8 +50,13 @@ memmap2 = "0.9"
 bytes = "1"
 
 # HuggingFace Hub integration
-hf-hub = { version = "0.5", default-features = false, features = ["ureq"] }
-reqwest = { version = "0.12", default-features = false, features = ["blocking", "json", "rustls-tls"] }
+# native-tls activates ureq?/native-tls inside hf-hub — this makes the
+# sync API use SecureTransport on macOS (system keychain) instead of
+# rustls (which ignores the macOS trust store and rejects Zscaler MITM certs).
+hf-hub = { version = "0.5", default-features = false, features = ["ureq", "native-tls"] }
+# native-tls here covers the reqwest calls in download/mod.rs (HEAD probes,
+# publish upload) — same Zscaler fix for the reqwest side.
+reqwest = { version = "0.12", default-features = false, features = ["blocking", "json", "native-tls"] }
 
 # OS-level mmap hints (madvise)
 [target.'cfg(unix)'.dependencies]
