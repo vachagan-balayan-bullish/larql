@@ -72,9 +72,3 @@ debug = false
 debug = "line-tables-only"
 split-debuginfo = "packed"
 
-[patch.crates-io]
-# Local patch: use RootCerts::PlatformVerifier (OS trust store) instead of
-# bundled webpki roots so that Zscaler MITM certs (in the macOS keychain)
-# are trusted. Upstream hf-hub 0.5.0 hardcodes WebPki in the native-tls
-# builder — there is no public API to override it.
-hf-hub = { path = "vendor/hf-hub" }

@@ -50,10 +50,10 @@ memmap2 = "0.9"
 bytes = "1"
 
 # HuggingFace Hub integration
-# native-tls activates ureq?/native-tls inside hf-hub — this makes the
-# sync API use SecureTransport on macOS (system keychain) instead of
-# rustls (which ignores the macOS trust store and rejects Zscaler MITM certs).
-hf-hub = { version = "0.5", default-features = false, features = ["ureq", "native-tls"] }
+# Forked hf-hub pinned to the fix/zscaler-platform-verifier branch:
+# uses RootCerts::PlatformVerifier (OS trust store / system keychain) so
+# Zscaler MITM certs are trusted. Upstream 0.5.0 hardcodes WebPki.
+hf-hub = { git = "https://github.com/vachagan-balayan-bullish/hf-hub", rev = "e2d756e90c67bae1484b1878da1f1639cf68aaf0", default-features = false, features = ["ureq", "native-tls"] }
 # native-tls here covers the reqwest calls in download/mod.rs (HEAD probes,
 # publish upload) — same Zscaler fix for the reqwest side.
 reqwest = { version = "0.12", default-features = false, features = ["blocking", "json", "native-tls"] }
